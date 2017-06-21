@@ -1,0 +1,21 @@
+* Focusing Questions
+** Who is the audience?
+** What do they hope to learn?
+
+* Possible (sub)topics
+- ES plugin
+  - why we needed it, what it does
+  - performance (would have to come after other work)
+- Pseudolabeling
+- Annotation
+- Automatic measurement
+  - This has some dependencies on the others probably
+* Es plugin outline
+** Why we needed it
+*** Our desire for a machine learned model
+*** Limitations with custom scoring scripts
+** What it does
+*** Featurize matching documents
+*** Also return feature vectors in explain
+* Funny notes:
+- we did the last resort first
