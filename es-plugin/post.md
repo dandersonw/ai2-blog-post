@@ -247,10 +247,16 @@ components touched on, and to implement all of the optional functionality
 available.
 
 After the performance work was finished the new ranker performed with limited
-degradation over the baseline (load tests against the Semantic Scholar search
+degradation against the baseline (load tests against the Semantic Scholar search
 endpoint measured 10% increase in latency at p99). We were happy to avoid making
-any difficult questions about changing our retrieval model to included reranking
+any difficult decisions about changing our retrieval model to included reranking
 or tightening our filter.
 
 # Conclusion
 
+We developed a plugin that allows us to have a powerful learning to rank
+environment in Elasticsearch. Thanks to that additional power we were able to
+improve the complexity and performance of our ranker signficantly. Thanks to the
+more convenient workflow enabled by training without a live cluster we were able
+to retrain our ranker with the recent introduction of all of the PubMed corpus
+to Semantic Scholar with only a few hours of work.
