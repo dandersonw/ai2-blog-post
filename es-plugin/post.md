@@ -238,7 +238,7 @@ to filter out documents that didn't contain some match for all mandatory terms
 in the query. The second was to tightly tune the implementation of featurization
 and model evaluation to be as performant as possible.
 
-Tuning the performance of featurization was actaully quite difficult. This
+Tuning the performance of featurization was actually quite difficult. This
 difficulty was connected with difficulty experienced in writing the
 featurization code in the first place - the web of Lucene contracts and possible
 Elasticsearch calling patterns meant it was easy to experience hard to debug
@@ -256,7 +256,7 @@ or tightening our filter.
 
 We developed a plugin that allows us to have a powerful learning to rank
 environment in Elasticsearch. Thanks to that additional power we were able to
-improve the complexity and performance of our ranker signficantly. Thanks to the
+improve the complexity and performance of our ranker significantly. Thanks to the
 more convenient workflow enabled by training without a live cluster we were able
 to retrain our ranker with the recent introduction of all of the PubMed corpus
 to Semantic Scholar with only a few hours of work.
