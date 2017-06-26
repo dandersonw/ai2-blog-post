@@ -1,10 +1,12 @@
 
-Semantic Scholar uses Elasticsearch as the core component in the search
-engine. As part of that we had previously trained a ranker that took the form of
-an Elasticsearch query. About six months ago we embarked on an effort to improve
-search relevance but had difficulty with the functionality available out of the
-box in Elasticsearch. We therefore developed a plugin to extend that
-functionality to include a more normalized machine learning environment.
+Semantic Scholar uses Elasticsearch as the core component in the search engine.
+Naturally we needed a query,
+so we hand crafted one that did a serviceable job.
+About six months ago we embarked on an effort to improve search relevance 
+but encountered difficulty making the changes we wanted
+with the functionality available out of the box in Elasticsearch. 
+We therefore developed a plugin to extend that functionality 
+to include a more normalized machine learning environment.
 
 # The Problem
 
@@ -35,7 +37,7 @@ query. That's great - we want all the information we can get.
 ```
 
 
-A problem arises when we have all this information though. How do we take n
+A problem arises when we have all this information though. How do we take in
 different features and combine them into a final score? The essential
 Elasticsearch technique is to write your query as a tree with similar features
 grouped together. This allows you to attempt to tune your query by coming up
@@ -64,22 +66,46 @@ with better combinations of subtrees or transformations on subtree scores
 That is fine as far as it goes - but it does not go as far as we would
 like. That is, we cannot write the arbitrary models we want. We can write custom
 scoring scripts, but they get only one `_score` value - they cannot see how much
-of the score came from `title`, and how much came from
-`abstract`.
-
-Lastly, it is not clear how to train a model in this context. If we cannot see
-the values then we cannot extract them for offline use. Previously training a
-model at S2 required a live Elasticsearch cluster with all our data - a large
-expense we want to avoid. <!-- I probably want to be clearer in this
-paragraph if there is space -->
+of the score came from `title` 
+and how much came from `abstract`.
+Without visibility into individual feature values
+it is not clear how to express something like a decision tree.
+Furthermore,
+even if a script could see multiple values
+it is not clear how to train a model
+with this setup.
 
 # The Solution - a plugin!
 
 The high level goal of our plugin is to enable a normalized learning to rank
-workflow with Elasticsearch at the core. In a sentence, we write a Lucene
-`Query` that featurizes matching documents according to an arbitrary
-specification and either passes those features as a vector to an arbitrary scoring
-function or returns them for offline use.
+workflow with Elasticsearch at the core. 
+We implement a Lucene `Query` that iterates over documents that match a query,
+and captures the values of low-level features 
+from matching the query to the document.
+The features are collected 
+and can be sent to an arbitrary scoring function
+to compute the final document score,
+or sent over the wire for use by an offline system.
+
+Instead of writing a plugin to provide a modified `Query`, 
+we could have written a service to take a large sample
+(say 1000 documents)
+from a basic Elasticsearch query
+and rank the documents again. 
+This would have been nice 
+because it would not have complicated our Elasticsearch deployment
+and we could calculate even the most expensive of features.
+With the plugin we have to redeploy whenever we make changes,
+and features that are evaluated on many documents need to be cheap.
+On the other hand, 
+we believed that the plugin would be
+the more performant final solution
+given cheap features,
+and its integration into Elasticsearch 
+meant the overall system architecture would be simpler.
+Ultimately we decided in favor of the plugin model 
+because of the conceptual simplicity
+and its composability with reranking in the worst case.
 
 ## Feature templates
 
@@ -119,11 +145,16 @@ An example of a feature:
 The above will return one value: the score on the match between the query and
 the `keyPhrases` field in a document.
 
-Previous experience indicated that models could make use of very primitive
-features like the TF and DF from TF-IDF. Normal Lucene queries don't necessarily
-report what we want directly but they do report the matching terms. We wrote a
-wrapper that takes the matching terms and reports some more primitive features
-that proved useful for our model.
+Normal queries make use of something called the
+[Lucene Practical Scoring Function](https://www.elastic.co/guide/en/elasticsearch/guide/current/practical-scoring-function.html)
+which incorporates several lower-level features
+(such as TF and DF).
+We also implement a featurization wrapper 
+that extracts some of those lower-level inputs
+and then reports them as features that the model
+can learn its own scoring function on.
+
+
 
 ```javascript
 {
@@ -154,13 +185,16 @@ We access numeric fields with simple call outs to scripts:
 
 ## Arbitrary scoring functions
 
-With features collected into vectors we can write our ranker as a function that
-takes an array of floats and returns a single float (the score for the
-document). To decide on actual implementation we considered a few
-factors. Firstly, we were using [RankLib](LINKME)'s implementation of several
-models. Secondly, we needed as much runtime performance as possible for
-production. Lastly, we also wanted to be able to reload models for rapid
-experimentation without restarting the cluster.
+With features collected into vectors 
+we can write our ranker as a function 
+that takes an array of floats and returns a single float
+(the score for the document). 
+To decide on actual implementation we considered a few factors. 
+Firstly, we were using [RankLib](https://sourceforge.net/p/lemur/wiki/RankLib/)'s 
+implementation of several models. 
+Secondly, we needed as much runtime performance as possible for production. 
+Lastly, we also wanted to be able to reload models for rapid experimentation
+without restarting the cluster.
 
 To meet the competing demands of production and rapid experimentation we
 implemented two ways of providing models. The first is just calling out
@@ -172,8 +206,9 @@ anything.
 RankLib normally evaluates models sort of as an interpreter - it has the model
 parameters in a data structure and traverses the data structure. In order to
 improve the performance of evaluating models in production we compiled RankLib
-regression trees to Java code. We distribute these in the plugin binary and call
-them out by classname.
+regression trees to Java code. 
+We distribute these in the plugin binary 
+and then call them out by classname.
 
 Calling to a compiled model:
 
@@ -243,7 +278,7 @@ difficulty was connected with difficulty experienced in writing the
 featurization code in the first place - the web of Lucene contracts and possible
 Elasticsearch calling patterns meant it was easy to experience hard to debug
 problems. The solution was to faithfully adhere to the contracts of the Lucene
-components touched on, and to implement all of the optional functionality
+components touched on and to implement all of the optional functionality
 available.
 
 After the performance work was finished the new ranker performed with limited
@@ -254,9 +289,13 @@ or tightening our filter.
 
 # Conclusion
 
-We developed a plugin that allows us to have a powerful learning to rank
-environment in Elasticsearch. Thanks to that additional power we were able to
-improve the complexity and performance of our ranker significantly. Thanks to the
-more convenient workflow enabled by training without a live cluster we were able
-to retrain our ranker with the recent introduction of all of the PubMed corpus
-to Semantic Scholar with only a few hours of work.
+The development of the plugin and a set of offline training tools
+creates a powerful learning to rank environment based on Elasticsearch.
+The primary fruit of the plugin, 
+and other relevance work that will be discussed in future posts,
+is the ability to train rankers easily.
+This includes ranker optimized for different query or corpus distributions.
+We retrained recently
+with the introduction of many new medical papers to Semantic Scholar,
+and will continue to adapt our ranking as we expand Semantic Scholar
+to include more and more branches of science.
