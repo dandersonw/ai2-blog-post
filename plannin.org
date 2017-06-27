@@ -17,5 +17,20 @@
 ** What it does
 *** Featurize matching documents
 *** Also return feature vectors in explain
+* Pseudolabeling outline
+- Refer back to es plugin post
+** Problem statement
+- Balance primary and secondary factors
+- An example
+** Formulation
+- Possible formulations
+- The one we picked
+** Training
+- (Label, hotness) projection
+** Pick a coefficient
+- What are the risks (subproblem statement)
+- What analysis we did
+** Results
+- Same as the slide shown at my presentation
 * Funny notes:
 - we did the last resort first
