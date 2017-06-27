@@ -49,7 +49,33 @@ if those older papers have been cited recently in proportion to their age.
 
 # Training
 
+In order to train our model to produce our ideal ranking
+we need to define a little more carefully what that ideal ranking is.
+First we imagine results sorted into bins based on primary textual relevance.
+Then, within the bins, we imagine results sorted again based on hotness.
+Maybe we want the edges of the bins to overlap a little, 
+maybe they should be separate,
+but that is the basic idea.
 
+The way we represent this notion at training time is to map 
+a tuple of (relevance label, hotness score) -> (final label) 
+where the final label is much more fine grained
+than the original relevance label.
+<!-- Mapping function -->
+We adjust the gain function used by our ranker 
+so that the exponentiation works out with the more fine grained labels.
+<!-- Gain function -->
 
 # Balance concerns (書き直すべきタイトル)
+
+With a formulation of hotness 
+and a way to take into account hotness at traintime
+we still need to decide how much exactly to weight hotness.
+This is the TODO parameter from the mapping function above.
+
+<!-- Graph of textual relevance against hotness coefficient -->
+
 # Model comparisons
+
+
+<!-- Corresponding chart from my presentation -->
