@@ -77,8 +77,6 @@ We adjust the gain function used by our ranker
 so that the exponentiation works out with the more fine grained labels.
 <!-- Gain function -->
 
-# Balance concerns (書き直すべきタイトル)
-
 With a formulation of hotness 
 and a way to take into account hotness at traintime
 we still need to decide how much exactly to weight hotness.
@@ -108,7 +106,13 @@ or at least that a more expressive model would be required to do a good job.
 To test this hypothesis we ran a few experiments with training different models.
 
 <!-- Should I include the baseline numbers? -->
-<!-- Corresponding chart from my presentation -->
+| Model (training metric)       | Hotness adjusted NDCG@10 | Unadjusted NDCG@10 |
+|:-----------------------------:|:------------------------:|:------------------:|
+| Linear (unadjusted)           | .60                      | .75                |
+| Linear (hotness adjusted)     | .64                      | .71                |
+| LambdaMART (unadjusted)       | .59                      | .76                |
+| LambdaMART (hotness adjusted) | .73                      | .71                |
+
 
 We see that with just textual relevance 
 a linear model does as good of a job as LambdaMART.
