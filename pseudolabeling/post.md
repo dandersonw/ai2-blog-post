@@ -50,9 +50,15 @@ We tried a few formulations of hotness,
 mostly different ways of summing up citation statistics 
 and balancing the age of a document.
 We settled on
-the number of recent (in the last three years) citations 
-divided by the age of the document.
-<!-- The formula, typeset nicely (in an image) -->
+a formulation that takes into account
+the number of recent citations
+and the age of the document.
+Below, `r` is the number of citations in the last three years,
+`a` is the age of the document,
+and {`A`, `R`, `T`} are normalizing constants.
+
+<img src="/Users/dericka/Documents/blog-post/pseudolabeling/hotness.svg" style="display: block; margin: auto; width: 9em;"/>
+
 The intuition is that users are always interested in new papers,
 but are willing to see older papers
 if those older papers have been cited recently in proportion to their age.
@@ -79,6 +85,8 @@ and `h` the hotness score.
 <img src="/Users/dericka/Documents/blog-post/pseudolabeling/label-mapping.svg" style="display: block; margin: auto; width: 20em;"/>
 
 We also adjust the gain function:
+
+<img src="/Users/dericka/Documents/blog-post/pseudolabeling/gain.svg" style="display: block; margin: auto; width: 9em;"/>
 
 With a formulation of hotness 
 and a way to take into account hotness at traintime

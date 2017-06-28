@@ -11,32 +11,27 @@ h = hotness
 newLabel = \\
 \begin{cases} 
 l= 0 & 0 \\
-l>0 & \mathrm{max}(\frac{M}{O} * (l - \frac{H}{\mathrm{e}^{h}})), 1) 
-\end{cases} \]
-
-\[
-newLabel = \\
-\begin{cases} 
-l= 0 & 0 \\
-l>0 & \mathrm{max}(\frac{M}{O} * (l - \frac{H}{\mathrm{e}^{h}})), 1) 
+l>0 & \mathrm{max}(\frac{M}{O} * (l - \frac{H}{\mathrm{e}^{h}}), 1) 
 \end{cases} 
 \]
-
 
 -- Gain Function
 
 2^(l * O/M) - 1
 
+\[
+2^{l * \frac{O}{M}} - 1
+\]
+
 -- Hotness Formulation
 
-R = recent citations
-A = age in years
-a_i = age importance
-cit_norm
-tot_norm
+R = citation norm
+r = number of recent citations
+A = age importance
+a = age in years
+T = total norm
 
-(R / cit_norm + a_i/A)/tot_norm
-
-(R/5 + 2/A)/3
-
+\[
+h=\\
 \frac{\frac{r}{R} + \frac{A}{a}}{T}
+\]
