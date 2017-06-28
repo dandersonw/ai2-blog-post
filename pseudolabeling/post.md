@@ -52,7 +52,7 @@ and balancing the age of a document.
 We settled on
 the number of recent (in the last three years) citations 
 divided by the age of the document.
-<!-- The formula, typeset nicely -->
+<!-- The formula, typeset nicely (in an image) -->
 The intuition is that users are always interested in new papers,
 but are willing to see older papers
 if those older papers have been cited recently in proportion to their age.
@@ -68,21 +68,24 @@ maybe they should be separate,
 but that is the basic idea.
 
 The way we represent this notion at training time is to map 
-a tuple of (relevance label, hotness score) -> (final label) 
-where the final label is much more fine grained
-than the original relevance label.
-<!-- Description of variables used below -->
-<!-- Mapping function -->
-We adjust the gain function used by our ranker 
-so that the exponentiation works out with the more fine grained labels.
-<!-- Gain function -->
+a tuple of (relevance label, hotness score) -> (new label) 
+where the new label is much more fine grained
+than the original relevance label. 
+Below, `l` is the input label, 
+`M` the new maximum label, 
+`N` the old maximum label, 
+and `h` the hotness score.
+
+<img src="/Users/dericka/Documents/blog-post/pseudolabeling/label-mapping.svg" style="display: block; margin: auto; width: 20em;"/>
+
+We also adjust the gain function:
 
 With a formulation of hotness 
 and a way to take into account hotness at traintime
 we still need to decide how much exactly to weight hotness.
-This is the TODO parameter from the mapping function above.
+That is the `H` constant from the mapping function above.
 
-<!-- Graph of textual relevance against hotness coefficient -->
+<img src="/Users/dericka/Documents/blog-post/pseudolabeling/textual-relevance-vs-hotness.png"/>
 
 Above we have a graph of the performance of a ranker 
 in terms of primary relevance
@@ -96,7 +99,14 @@ For now we've chosen a hotness coefficient of 1
 as that level seemed, under manual analysis, 
 to provide the best mix of results.
 
-<!-- Discuss how the variation in query intents is considered -->
+The differing importance of hotness for different categories of queries 
+is reflected in the final results because of the interaction 
+between our annotation guidelines and the label mapping.
+For query categories where hotness is most important
+(author names and venues)
+we annotate only two labels: for relevent or not.
+The ranker should then, in theory,
+learn to rank documents that match these queries strongly on hotness.
 
 # Model comparisons
 
@@ -105,7 +115,6 @@ would be more difficult for the model to optimize,
 or at least that a more expressive model would be required to do a good job.
 To test this hypothesis we ran a few experiments with training different models.
 
-<!-- Should I include the baseline numbers? -->
 | Model (training metric)       | Hotness adjusted NDCG@10 | Unadjusted NDCG@10 |
 |:-----------------------------:|:------------------------:|:------------------:|
 | Linear (unadjusted)           | .60                      | .75                |
@@ -126,7 +135,7 @@ becomes important to scoring well.
 There is a lot of future work for us in this area.
 Maybe most pressing is the empirical justification and refinement of 
 both our formulation of hotness
-and our mapping from (relevance label, hotness) -> (final label).
+and our mapping from (relevance label, hotness) -> (new label).
 We did some manual analysis to select values for now,
 but since both are important for the user experience
 we want to connect them to observable user metrics.

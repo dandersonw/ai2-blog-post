@@ -1,0 +1,42 @@
+-- Mapping Function
+
+O = old max label
+M = new max label
+l = label
+h = hotness
+
+(M/O) * (l - (H * e^(-hotness)))
+
+\[
+newLabel = \\
+\begin{cases} 
+l= 0 & 0 \\
+l>0 & \mathrm{max}(\frac{M}{O} * (l - \frac{H}{\mathrm{e}^{h}})), 1) 
+\end{cases} \]
+
+\[
+newLabel = \\
+\begin{cases} 
+l= 0 & 0 \\
+l>0 & \mathrm{max}(\frac{M}{O} * (l - \frac{H}{\mathrm{e}^{h}})), 1) 
+\end{cases} 
+\]
+
+
+-- Gain Function
+
+2^(l * O/M) - 1
+
+-- Hotness Formulation
+
+R = recent citations
+A = age in years
+a_i = age importance
+cit_norm
+tot_norm
+
+(R / cit_norm + a_i/A)/tot_norm
+
+(R/5 + 2/A)/3
+
+\frac{\frac{r}{R} + \frac{A}{a}}{T}
