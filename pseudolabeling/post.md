@@ -57,7 +57,7 @@ Below, `r` is the number of citations in the last three years,
 `a` is the age of the document,
 and {`A`, `R`, `T`} are normalizing constants.
 
-<img src="/Users/dericka/Documents/blog-post/pseudolabeling/hotness.svg" style="display: block; margin: auto; width: 9em;"/>
+<img src="./hotness.svg" style="display: block; margin: auto; width: 9em;"/>
 
 The intuition is that users are always interested in new papers,
 but are willing to see older papers
@@ -82,18 +82,18 @@ Below, `l` is the input label,
 `N` the old maximum label, 
 and `h` the hotness score.
 
-<img src="/Users/dericka/Documents/blog-post/pseudolabeling/label-mapping.svg" style="display: block; margin: auto; width: 20em;"/>
+<img src="./label-mapping.svg" style="display: block; margin: auto; width: 20em;"/>
 
 We also adjust the gain function:
 
-<img src="/Users/dericka/Documents/blog-post/pseudolabeling/gain.svg" style="display: block; margin: auto; width: 9em;"/>
+<img src="./gain.svg" style="display: block; margin: auto; width: 9em;"/>
 
 With a formulation of hotness 
 and a way to take into account hotness at traintime
 we still need to decide how much exactly to weight hotness.
 That is the `H` constant from the mapping function above.
 
-<img src="/Users/dericka/Documents/blog-post/pseudolabeling/textual-relevance-vs-hotness.png"/>
+<img src="./textual-relevance-vs-hotness.png"/>
 
 Above we have a graph of the performance of a ranker 
 in terms of primary relevance
