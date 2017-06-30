@@ -4,9 +4,14 @@ Naturally we needed a query,
 so we hand crafted one that did a serviceable job.
 About six months ago we embarked on an effort to improve search relevance 
 but encountered difficulty making the changes we wanted
-with the functionality available out of the box in Elasticsearch. 
+with the functionality available out of the box in Elasticsearch.
+Out of the box 
+Elasticsearch doesn't provide support for expressing complicated models,
+or for an easy model training workflow.
 We therefore developed a plugin to extend that functionality 
-to include a more normalized machine learning environment.
+to include a more normalized machine learning environment,
+i.e. evaluating arbitrary models on features from feature templates
+and featurizing training datasets for training without a cluster.
 
 # The Problem
 
