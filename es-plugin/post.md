@@ -1,18 +1,17 @@
+Semantic Scholar is an academic search engine for scientists, 
+which means that relevance and ranking are core components of the site. 
+We use Elasticsearch to power our search experience, 
+and for a long time we relied on a handcrafted query 
+that did a reasonable job with our initial corpus of computer science papers.
 
-Semantic Scholar uses Elasticsearch as the core component in the search engine.
-Naturally we needed a query,
-so we hand crafted one that did a serviceable job.
-About six months ago we embarked on an effort to improve search relevance 
-but encountered difficulty making the changes we wanted
-with the functionality available out of the box in Elasticsearch.
-Out of the box 
-Elasticsearch doesn't provide support for expressing complicated models,
-or for an easy model training workflow.
-We therefore developed a plugin to extend that functionality 
-to include a more normalized machine learning environment,
-i.e. evaluating arbitrary models on features from feature templates
+As we scaled up, though, 
+we realized we needed more than what Elasticsearch can provide out of the box -
+it doesn't provide support for expressing complicated models, 
+or for an easy model training workflow. 
+We therefore built a plugin to extend that default functionality 
+to include a more normalized machine learning environment, 
+i.e. evaluating arbitrary models on features from feature templates 
 and featurizing training datasets for training without a cluster.
-
 # The Problem
 
 If we look at an official
